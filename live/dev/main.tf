@@ -6,16 +6,16 @@ provider "aws" {
 module "vpc" {
   source = "../../modules/vpc"
 
-  project_name = local.project_name
-  env = local.env
+  project_name  = local.project_name
+  env           = local.env
 
   vpc_cidr_block      = "12.0.0.0/16"
   availability_zones  = ["us-east-1a", "us-east-1b"]
   public_subnets      = ["12.0.1.0/24", "12.0.2.0/24"]
   private_subnets     = ["12.0.3.0/24", "12.0.4.0/24"]
 
-  region = "us-east-1"
-  enable_s3_enpoint = false
+  region            = "us-east-1"
+  enable_s3_enpoint = true
 }
 
 
@@ -61,8 +61,7 @@ module "s3" {
 
   project_name  = local.project_name
   env           = local.env
-
-  s3_buckets = [ "organizationmanagementfiles3" ]
+  s3_buckets    = [ "organizationmanagementfiles3" ]
 }
 
 module "iam" {
@@ -71,9 +70,9 @@ module "iam" {
   project_name  = local.project_name
   env           = local.env
 
-  dev_policy_resources = local.dev_policy_resources
-  devops_policy_resources =  local.devops_policy_resources
-  backend_policy_resources = local.backend_policy_resources
+  dev_policy_resources      = local.dev_policy_resources
+  devops_policy_resources   =  local.devops_policy_resources
+  backend_policy_resources  = local.backend_policy_resources
 }
 
 # security group rule
@@ -96,7 +95,7 @@ locals {
   # bastion host
   bastion_host_sg_cidr_blocks = [
     {
-      name = "1a"
+      name    = "1a"
       ingress = {
         "ssh" = ["0.0.0.0/0"]
       }
@@ -109,7 +108,7 @@ locals {
   # request forwarder
   request_forwarder_sg_cidr_blocks = [
     {
-      name = "1a"
+      name    = "1a"
       ingress = {
         "http"  = ["0.0.0.0/0"]
         "https" = ["0.0.0.0/0"]
@@ -137,7 +136,7 @@ locals {
 
   database_sg_cidr_blocks = [
     {
-      name = "1a"
+      name    = "1a"
       ingress = {
         "postgresql" = [module.instances.backend_instances_cidr_blocks[0]]
       }
@@ -159,15 +158,16 @@ locals {
   # Define frontend instances
   frontend_instances = {
     ami = {
-       owners                 = [ "099720109477" ]
-        names                  = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+      owners  = [ "099720109477" ]
+      names   = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
     }
     instances_info = [
       {
-        instance_type           = "t2.micro"
-        security_group_ids      = [module.security_groups.frontend_security_group_ids[0]]
-        subnet_id               = module.vpc.public_subnet_ids[0]
-        name                    = "frontend-1a"
+        instance_type       = "t2.micro"
+        security_group_ids  = [module.security_groups.frontend_security_group_ids[0]]
+        subnet_id           = module.vpc.public_subnet_ids[0]
+        name                = "frontend-1a"
+        key_pair_name       = "organization_management_frontend_key_pair"
       },
     ]
   }
@@ -176,15 +176,16 @@ locals {
   # bastion_host instances
   bastion_host_instances = {
     ami = {
-       owners                 = [ "099720109477" ]
-        names                  = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+      owners  = [ "099720109477" ]
+      names   = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
     }
     instances_info = [
       {
-        instance_type           = "t2.micro"
-        security_group_ids      = [module.security_groups.bastion_host_security_group_ids[0]]
-        subnet_id               = module.vpc.public_subnet_ids[0]
-        name                    = "bastion_host-1a"
+        instance_type       = "t2.micro"
+        security_group_ids  = [module.security_groups.bastion_host_security_group_ids[0]]
+        subnet_id           = module.vpc.public_subnet_ids[0]
+        name                = "bastion_host-1a"
+        key_pair_name       = "organization_management_bastion_host_key_pair"
       }
     ]
   }
@@ -192,15 +193,16 @@ locals {
   # Define request forwarder instances
     request_forwarder_instances = {
       ami = {
-        owners                 = [ "099720109477" ]
-        names                  = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+        owners  = [ "099720109477" ]
+        names   = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
       }
       instances_info = [
         {
-          instance_type           = "t2.micro"
-          security_group_ids      = [module.security_groups.request_forwarder_security_group_ids[0]]
-          subnet_id               = module.vpc.public_subnet_ids[0]
-          name                    = "request-forward-1a"
+          instance_type       = "t2.micro"
+          security_group_ids  = [module.security_groups.request_forwarder_security_group_ids[0]]
+          subnet_id           = module.vpc.public_subnet_ids[0]
+          name                = "request-forward-1a"
+          key_pair_name       = "organization_management_request_forwarder_key_pair"
         }
       ]
   }
@@ -208,15 +210,16 @@ locals {
    # Define backend instances
   backend_instances = {
     ami = {
-       owners                 = [ "099720109477" ]
-        names                  = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+      owners  = [ "099720109477" ]
+      names   = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
     }
     instances_info = [
       {
-        instance_type           = "t2.micro"
-        security_group_ids      = [module.security_groups.backend_security_group_ids[0]]
-        subnet_id               = module.vpc.private_subnet_ids[0]
-        name                    = "backend-1a"
+        instance_type       = "t2.micro"
+        security_group_ids  = [module.security_groups.backend_security_group_ids[0]]
+        subnet_id           = module.vpc.private_subnet_ids[0]
+        name                = "backend-1a"
+        key_pair_name       = "organization_management_backend_key_pair"
       }
     ]
   }
@@ -231,7 +234,7 @@ locals {
       name       = "postgresql"
     }
     database_info = {
-      db_name           = "postgresql"
+      db_name           = "organization_management"
       identifier        = "organization-management-database"
       engine            = "postgres"
       engine_version    = "16.3"
@@ -250,12 +253,12 @@ locals {
 locals {
   dev_policy_resources = {
     "ec2" = ["*"]
-    "s3" = module.s3.s3_buckets_arns
+    "s3"  = module.s3.s3_buckets_arns
   }
 
   devops_policy_resources = {
     "ec2" = module.instances.ec2_instances_arns
-    "s3" = module.s3.s3_buckets_arns
+    "s3"  = module.s3.s3_buckets_arns
   }
 
   backend_policy_resources = {

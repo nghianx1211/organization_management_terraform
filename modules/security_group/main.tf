@@ -40,8 +40,8 @@ resource "aws_security_group" "frontends_sg" {
     }
 
     tags = {
-        Name = "${var.project_name}-${var.env}-${each.value.name}-frontend-security_group"
-        Environment  = var.env
+        Name        = "${var.project_name}-${var.env}-${each.value.name}-frontend-security_group"
+        Environment = var.env
     }
 }
 
@@ -50,8 +50,8 @@ resource "aws_security_group" "frontends_sg" {
 resource "aws_security_group" "bastion_hosts_sg" {
     for_each = {for cidr_blocks in var.bastion_host_sg_cidr_blocks : cidr_blocks.name => cidr_blocks}
 
-    name = "${var.project_name}-${var.env}-${each.value.name}-bastion_host-sg"
-    vpc_id = var.vpc_id
+    name    = "${var.project_name}-${var.env}-${each.value.name}-bastion_host-sg"
+    vpc_id  = var.vpc_id
 
     # ingress
     ingress {
@@ -60,11 +60,19 @@ resource "aws_security_group" "bastion_hosts_sg" {
         to_port     = 22
         protocol    = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
-    } 
+    }
+
+    # egress
+    egress {
+        description = "Allow All traffic"
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+    }
 
     tags = {
-        Name = "${var.project_name}-${var.env}-${each.value.name}-bastion_host-security_group"
-        Environment  = var.env
+        Name        = "${var.project_name}-${var.env}-${each.value.name}-bastion_host-security_group"
+        Environment = var.env
     }
 }
 
@@ -73,8 +81,8 @@ resource "aws_security_group" "bastion_hosts_sg" {
 resource "aws_security_group" "request_forwarders_sg" {
     for_each = {for cidr_blocks in var.request_forward_sg_cidr_blocks : cidr_blocks.name => cidr_blocks}
 
-    name = "${var.project_name}-${var.env}-${each.value.name}-request_forwarder-sg"
-    vpc_id = var.vpc_id
+    name    = "${var.project_name}-${var.env}-${each.value.name}-request_forwarder-sg"
+    vpc_id  = var.vpc_id
 
     # ingress
     ingress {
@@ -89,6 +97,14 @@ resource "aws_security_group" "request_forwarders_sg" {
         description = "Allow HTTP access"
         from_port   = 80
         to_port     = 80
+        protocol    = "tcp"
+        cidr_blocks = each.value.ingress["http"]
+    }
+
+    ingress {
+        description = "Allow custom tcp access"
+        from_port   = 8081
+        to_port     = 8081
         protocol    = "tcp"
         cidr_blocks = each.value.ingress["http"]
     }
@@ -110,8 +126,8 @@ resource "aws_security_group" "request_forwarders_sg" {
     }
 
     tags = {
-        Name = "${var.project_name}-${var.env}-${each.value.name}-request_forwarder-security_group"
-        Environment  = var.env
+        Name        = "${var.project_name}-${var.env}-${each.value.name}-request_forwarder-security_group"
+        Environment = var.env
     }
 }
 
@@ -120,8 +136,8 @@ resource "aws_security_group" "request_forwarders_sg" {
 resource "aws_security_group" "backends_sg" {
     for_each = {for cidr_blocks in var.backend_sg_cidr_blocks : cidr_blocks.name => cidr_blocks}
 
-    name = "${var.project_name}-${var.env}-${each.value.name}-backend-sg"
-    vpc_id = var.vpc_id
+    name    = "${var.project_name}-${var.env}-${each.value.name}-backend-sg"
+    vpc_id  = var.vpc_id
 
     # ingress
     ingress {
@@ -136,6 +152,14 @@ resource "aws_security_group" "backends_sg" {
         description = "Allow HTTP access"
         from_port   = 80
         to_port     = 80
+        protocol    = "tcp"
+        cidr_blocks = each.value.ingress["http"]
+    }
+
+    ingress {
+        description = "Allow custom tcp access"
+        from_port   = 8080
+        to_port     = 8080
         protocol    = "tcp"
         cidr_blocks = each.value.ingress["http"]
     }
@@ -157,8 +181,8 @@ resource "aws_security_group" "backends_sg" {
     }
 
     tags = {
-        Name = "${var.project_name}-${var.env}-${each.value.name}-backend-security_group"
-        Environment  = var.env
+        Name        = "${var.project_name}-${var.env}-${each.value.name}-backend-security_group"
+        Environment = var.env
     }
 }
 
@@ -167,8 +191,8 @@ resource "aws_security_group" "backends_sg" {
 resource "aws_security_group" "databases_sg" {
     for_each = {for cidr_blocks in var.database_sg_cidr_blocks : cidr_blocks.name => cidr_blocks}
 
-    name = "${var.project_name}-${var.env}-${each.value.name}-database-sg"
-    vpc_id = var.vpc_id
+    name    = "${var.project_name}-${var.env}-${each.value.name}-database-sg"
+    vpc_id  = var.vpc_id
 
     # ingress
     ingress {
@@ -189,7 +213,7 @@ resource "aws_security_group" "databases_sg" {
     }
 
     tags = {
-        Name = "${var.project_name}-${var.env}-${each.value.name}-database-security_group"
+        Name         = "${var.project_name}-${var.env}-${each.value.name}-database-security_group"
         Environment  = var.env
     }
 }

@@ -1,14 +1,15 @@
 variable "frontend_instances" {
   type = object({
     ami = object({
-      owners                = set(string)
-      names                 = set(string)
+      owners  = set(string)
+      names   = set(string)
     })
     instances_info = list(object({
-      instance_type           = string
-      name                    = string
-      subnet_id               = string
-      security_group_ids      = set(string)
+      instance_type       = string
+      name                = string
+      subnet_id           = string
+      security_group_ids  = set(string)
+      key_pair_name       = string
     }))
   })
 }
@@ -16,14 +17,15 @@ variable "frontend_instances" {
 variable "bastion_host_instances" {
   type = object({
     ami = object({
-      owners                = set(string)
-      names                 = set(string)
+      owners  = set(string)
+      names   = set(string)
     })
     instances_info = list(object({
-      instance_type           = string
-      name                    = string
-      subnet_id               = string
-      security_group_ids      = set(string)
+      instance_type       = string
+      name                = string
+      subnet_id           = string
+      security_group_ids  = set(string)
+      key_pair_name       = string
     }))
   })
 }
@@ -31,14 +33,15 @@ variable "bastion_host_instances" {
 variable "request_forwarder_instances" {
   type = object({
     ami = object({
-      owners                = set(string)
-      names                 = set(string)
+      owners  = set(string)
+      names   = set(string)
     })
     instances_info = list(object({
-      instance_type           = string
-      name                    = string
-      subnet_id               = string
-      security_group_ids      = set(string)
+      instance_type       = string
+      name                = string
+      subnet_id           = string
+      security_group_ids  = set(string)
+      key_pair_name       = string
     }))
   })
 }
@@ -46,14 +49,15 @@ variable "request_forwarder_instances" {
 variable "backend_instances" {
   type = object({
     ami = object({
-      owners                = set(string)
-      names                 = set(string)
+      owners  = set(string)
+      names   = set(string)
     })
     instances_info = list(object({
-      instance_type           = string
-      name                    = string
-      subnet_id               = string
-      security_group_ids      = set(string)
+      instance_type       = string
+      name                = string
+      subnet_id           = string
+      security_group_ids  = set(string)
+      key_pair_name       = string
     }))
   })
 }
