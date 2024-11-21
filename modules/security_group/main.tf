@@ -37,6 +37,7 @@ resource "aws_security_group" "frontends_sg" {
         from_port   = 0
         to_port     = 0
         protocol    = "-1"
+        cidr_blocks = each.value.egress["all_trafic"]
     }
 
     tags = {
@@ -68,6 +69,7 @@ resource "aws_security_group" "bastion_hosts_sg" {
         from_port   = 0
         to_port     = 0
         protocol    = "-1"
+        cidr_blocks = each.value.egress["all_trafic"]
     }
 
     tags = {
@@ -123,6 +125,7 @@ resource "aws_security_group" "request_forwarders_sg" {
         from_port   = 0
         to_port     = 0
         protocol    = "-1"
+        cidr_blocks = each.value.egress["all_trafic"]
     }
 
     tags = {
@@ -178,6 +181,7 @@ resource "aws_security_group" "backends_sg" {
         from_port   = 0
         to_port     = 0
         protocol    = "-1"
+        cidr_blocks = each.value.egress["all_trafic"]
     }
 
     tags = {
