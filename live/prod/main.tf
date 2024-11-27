@@ -59,7 +59,7 @@ module "s3" {
 
   project_name  = local.project_name
   env           = local.env
-  s3_buckets    = [ "organizationmanagementfiles3" ]
+  s3_buckets    = [ "organizationmanagementfiles3product" ]
 }
 
 module "iam" {
@@ -133,7 +133,7 @@ locals {
 # Define general information
 locals {
   project_name = "organization_management"
-  env          = "dev"
+  env          = "production"
 }
 
 #### Define instances

@@ -30,22 +30,6 @@ variable "bastion_host_instances" {
   })
 }
 
-variable "request_forwarder_instances" {
-  type = object({
-    ami = object({
-      owners  = set(string)
-      names   = set(string)
-    })
-    instances_info = list(object({
-      instance_type       = string
-      name                = string
-      subnet_id           = string
-      security_group_ids  = set(string)
-      key_pair_name       = string
-    }))
-  })
-}
-
 variable "backend_instances" {
   type = object({
     ami = object({

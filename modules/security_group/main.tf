@@ -78,63 +78,6 @@ resource "aws_security_group" "bastion_hosts_sg" {
     }
 }
 
-
-# ================= request forwarder sg ====================
-resource "aws_security_group" "request_forwarders_sg" {
-    for_each = {for cidr_blocks in var.request_forward_sg_cidr_blocks : cidr_blocks.name => cidr_blocks}
-
-    name    = "${var.project_name}-${var.env}-${each.value.name}-request_forwarder-sg"
-    vpc_id  = var.vpc_id
-
-    # ingress
-    ingress {
-        description = "Allow HTTPS access"
-        from_port   = 443
-        to_port     = 443
-        protocol    = "tcp"
-        cidr_blocks = each.value.ingress["https"]
-    }
-
-    ingress {
-        description = "Allow HTTP access"
-        from_port   = 80
-        to_port     = 80
-        protocol    = "tcp"
-        cidr_blocks = each.value.ingress["http"]
-    }
-
-    ingress {
-        description = "Allow custom tcp access"
-        from_port   = 8081
-        to_port     = 8081
-        protocol    = "tcp"
-        cidr_blocks = each.value.ingress["http"]
-    }
-
-    ingress {
-        description = "Allow SSH access"
-        from_port   = 22
-        to_port     = 22
-        protocol    = "tcp"
-        cidr_blocks = each.value.ingress["ssh"]
-    }
-
-    # egress
-    egress {
-        description = "Allow All traffic"
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = each.value.egress["all_trafic"]
-    }
-
-    tags = {
-        Name        = "${var.project_name}-${var.env}-${each.value.name}-request_forwarder-security_group"
-        Environment = var.env
-    }
-}
-
-
 # ================ Backend sg ==================
 resource "aws_security_group" "backends_sg" {
     for_each = {for cidr_blocks in var.backend_sg_cidr_blocks : cidr_blocks.name => cidr_blocks}

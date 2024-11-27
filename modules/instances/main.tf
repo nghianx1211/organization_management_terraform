@@ -56,35 +56,6 @@ resource "aws_instance" "bastion_hosts" {
 }
 
 
-# ================== Request forwarder =====================
-data "aws_ami" "request_forwarder" {
-  most_recent = true
-	owners 			= var.request_forwarder_instances.ami.owners
-
-	filter {
-		name 		= "name"
-		values 	= var.request_forwarder_instances.ami.names
-	}
-}
-
-resource "aws_instance" "request_forwarders" {
-  for_each = {for instance_info in var.request_forwarder_instances.instances_info : instance_info.name => instance_info}
-
-	ami 										= data.aws_ami.request_forwarder.id
-	instance_type           = each.value.instance_type
-	vpc_security_group_ids  = each.value.security_group_ids
-	subnet_id               = each.value.subnet_id
-
-	associate_public_ip_address = true
-	key_name 										= each.value.key_pair_name
-
-  tags = {
-		Name 				= "${var.project_name}-${var.env}-${each.value.name}"
-		Environment = var.env
-	}
-}
-
-
 #================= Backend ======================
 
 data "aws_ami" "backend" {

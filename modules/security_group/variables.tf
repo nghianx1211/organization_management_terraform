@@ -26,14 +26,6 @@ variable "bastion_host_sg_cidr_blocks" {
   }))
 }
 
-variable "request_forward_sg_cidr_blocks" {
-  type = list(object({
-    name    = string
-    ingress = map(list(string))
-    egress  = map(list(string))
-  }))
-}
-
 variable "backend_sg_cidr_blocks" {
   type = list(object({
     name    = string
