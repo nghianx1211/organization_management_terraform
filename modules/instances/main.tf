@@ -71,7 +71,7 @@ data "aws_ami" "backend" {
 resource "aws_iam_instance_profile" "backend" {
   count = var.backend_assume_role_name != "" ? 1 : 0
 
-  name = "profile"
+  name = "profile-${var.env}"
   role = var.backend_assume_role_name
 }
 

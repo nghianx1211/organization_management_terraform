@@ -2,3 +2,4 @@
 *.backup
 *.hcl
 live/dev/.terraform/
+live/prod/.terraform/

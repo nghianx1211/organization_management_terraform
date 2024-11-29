@@ -13,7 +13,7 @@ resource "aws_db_instance" "database" {
   count	= length(var.databases)
 
 	db_name 					= var.databases[count.index].database_info.db_name
-	identifier 				= var.databases[count.index].database_info.identifier 
+	identifier 				= "${var.databases[count.index].database_info.identifier}${var.env}"
 	engine 						= var.databases[count.index].database_info.engine
 	engine_version 		= var.databases[count.index].database_info.engine_version
 	instance_class 		= var.databases[count.index].database_info.instance_class

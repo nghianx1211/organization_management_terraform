@@ -9,10 +9,10 @@ module "vpc" {
   project_name  = local.project_name
   env           = local.env
 
-  vpc_cidr_block      = "12.0.0.0/16"
+  vpc_cidr_block      = "15.0.0.0/16"
   availability_zones  = ["us-east-1a", "us-east-1b"]
-  public_subnets      = ["12.0.1.0/24", "12.0.2.0/24"]
-  private_subnets     = ["12.0.3.0/24", "12.0.4.0/24"]
+  public_subnets      = ["15.0.1.0/24", "15.0.2.0/24"]
+  private_subnets     = ["15.0.3.0/24", "15.0.4.0/24"]
 
   region            = "us-east-1"
   enable_s3_enpoint = true
@@ -59,7 +59,7 @@ module "s3" {
 
   project_name  = local.project_name
   env           = local.env
-  s3_buckets    = [ "organizationmanagementfiles3product" ]
+  s3_buckets    = [ "organizationmanagementfiles3prod" ]
 }
 
 module "iam" {
@@ -69,7 +69,7 @@ module "iam" {
   env           = local.env
 
   dev_policy_resources      = local.dev_policy_resources
-  devops_policy_resources   =  local.devops_policy_resources
+  devops_policy_resources   = local.devops_policy_resources
   backend_policy_resources  = local.backend_policy_resources
 }
 
@@ -200,8 +200,8 @@ locals {
       name       = "postgresql"
     }
     database_info = {
-      db_name           = "organization_management"
-      identifier        = "organization-management-database"
+      db_name           = "organization_management_prod"
+      identifier        = "organization-management-database-prod"
       engine            = "postgres"
       engine_version    = "16.3"
       instance_class    = "db.t3.micro"
