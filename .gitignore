@@ -1,5 +1,6 @@
 *.tfstate
 *.backup
 *.hcl
+*.info
 live/dev/.terraform/
 live/prod/.terraform/
