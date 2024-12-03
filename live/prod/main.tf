@@ -200,8 +200,8 @@ locals {
       name       = "postgresql"
     }
     database_info = {
-      db_name           = "organization_management_prod"
-      identifier        = "organization-management-database-prod"
+      db_name           = "organization_management"
+      identifier        = "organization-management-database"
       engine            = "postgres"
       engine_version    = "16.3"
       instance_class    = "db.t3.micro"
